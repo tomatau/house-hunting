@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>House hunting</title>
+</head>
+
+<body>
+  <div id="app"></div>
+  <div id="map"></div>
+  <iframe class="sheet-embed"
+    src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRnu66ruEMEmghKb9MhDhmMjAscbozf4W_BTuSAziwfxWlFNDHRhE4gkZMLtARtRSGew0rMk9v4xUv4/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+  <script>
+    function initMap() {
+      const mapDiv = document.getElementById('map');
+
+      const map = new google.maps.Map(mapDiv, {
+        center: { lat: 51.994061, lng: -3.793350 },
+        zoom: 9,
+      });
+
+      window.myMap = map;
+    }
+  </script>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDj5G8UIpw0dmdPmzC6fAbUV6elPLdnhIY&callback=initMap">
+    </script>
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>
