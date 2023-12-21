@@ -1,7 +1,6 @@
 import * as R from 'ramda'
 
 console.log(import.meta.env)
-
 const GOOGLE_SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID
 const GOOGLE_MAP_API_KEY = import.meta.env.VITE_GOOGLE_MAP_API_KEY
 
@@ -14,9 +13,11 @@ const GOOGLE_MAP_EMBED_URL = () =>
 const GOOGLE_MAP_MARKER_URL = (address = '') =>
   `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${GOOGLE_MAP_API_KEY}`
 
-function House(house) {
-  for (const [key, val] of R.toPairs(house)) {
-    this[key] = val
+class House {
+  constructor(house) {
+    for (const [key, val] of R.toPairs(house)) {
+      this[key] = val
+    }
   }
 }
 
@@ -25,7 +26,7 @@ function calculateRank(house) {
 }
 
 const camelCase = (str = '') =>
-  str.replace(/[-_ ]([a-z])/g, (m) => m[1].toUpperCase())
+  str.replace(/[-_ ]([a-z])/g, m => m[1].toUpperCase())
 
 async function fetchHouseDataFromSheet() {
   const response = await fetch(GOOGLE_SHEET_URL())
@@ -36,7 +37,7 @@ async function fetchHouseDataFromSheet() {
 
   const titleKeys = R.pipe(R.map(R.toLower), R.map(camelCase))(titles)
 
-  const houses = rows.map((row) => {
+  const houses = rows.map(row => {
     const zippedRow = R.pipe(R.zipObj(titleKeys))(row)
     return new House(zippedRow)
   })
@@ -46,6 +47,8 @@ async function fetchHouseDataFromSheet() {
 
 async function displayOnMap(houses) {
   for (const house of houses) {
+    if (!house.address) continue
+
     const markerUrl = GOOGLE_MAP_MARKER_URL(encodeURIComponent(house.address))
 
     const response = await fetch(markerUrl)
@@ -78,7 +81,7 @@ async function displayOnMap(houses) {
 ;(async function () {
   const houses = await fetchHouseDataFromSheet()
 
-  houses.forEach((house) => calculateRank(house))
+  houses.forEach(house => calculateRank(house))
 
   await displayOnMap(houses)
 })()
